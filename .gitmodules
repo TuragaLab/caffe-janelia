@@ -1,0 +1,6 @@
+[submodule "caffe_gt"]
+	path = caffe_gt
+	url = https://github.com/TuragaLab/caffe.git
+[submodule "PyGreentea"]
+	path = PyGreentea
+	url = https://github.com/TuragaLab/PyGreentea.git
