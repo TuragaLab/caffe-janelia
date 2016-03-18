@@ -17,7 +17,7 @@ netconf.use_batchnorm = False
 netconf.dropout = 0.0
 netconf.fmap_start = 4
 netconf.fmap_input = 1
-netconf.fmap_output = 4
+netconf.fmap_output = 3
 netconf.loss_activation = 'relu'
 netconf.u_netconfs[0].use_deconvolution_uppath = False
 netconf.u_netconfs[0].unet_fmap_inc_rule = lambda fmaps: int(math.ceil(fmaps * 3))
@@ -32,16 +32,9 @@ print ('Feature maps: %s' % netconf.fmap_start)
 
 netconf.loss_function = "euclid"
 train_net_conf_euclid, test_net_conf = pygt.netgen.create_nets(netconf)
-netconf.loss_function = "malis"
-train_net_conf_malis, test_net_conf = pygt.netgen.create_nets(netconf)
 
 with open('net_train_euclid.prototxt', 'w') as f:
     print(train_net_conf_euclid, file=f)
-with open('net_train_malis.prototxt', 'w') as f:
-    print(train_net_conf_malis, file=f)
-with open('net_test.prototxt', 'w') as f:
-    print(test_net_conf, file=f)
-
 
 
 #### Make a big test proto
@@ -50,7 +43,7 @@ netconf.ignore_conv_buffer = True
 netconf.mem_global_limit = 8 * 1024 * 1024 * 1024
 mode = pygt.netgen.caffe_pb2.TEST
 shape_min = [100,100,100]
-shape_max = [300,300,300]
+shape_max = [220,600,600]
 constraints = [None, lambda x: x[0], lambda x: x[1]]
 
 inshape,outshape,fmaps = pygt.netgen.compute_valid_io_shapes(netconf,mode,shape_min,shape_max,constraints=constraints)
