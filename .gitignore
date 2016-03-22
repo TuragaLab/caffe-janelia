@@ -1,1 +1,8 @@
 malis
+*.h5
+*.caffemodel
+*.solverstate
+*.err
+*.out
+*.prototxt
+*.mat
