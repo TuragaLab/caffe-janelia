@@ -16,7 +16,7 @@ path = '/groups/turaga/home/turagas/data/FlyEM/fibsem_medulla_7col/'
 # Train set
 train_dataset = []
 train_dataset.append({})
-dname = 'tstvol-520-1-h5'
+dname = 'trvol-250-1-h5'
 train_dataset[-1]['name'] = dname
 train_dataset[-1]['nhood'] = pygt.malis.mknhood3d()
 train_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
@@ -38,7 +38,7 @@ for iset in range(len(train_dataset)):
 
 # Train set
 test_dataset = []
-for dname in ['tstvol-520-2-h5','tstvol-520-1-h5']:
+for dname in ['trvol-250-1-h5','trvol-250-2-h5']:
 	test_dataset.append({})
 	test_dataset[-1]['name'] = dname
 	test_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
