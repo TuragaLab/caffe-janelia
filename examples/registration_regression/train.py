@@ -16,6 +16,7 @@ path = '/data-ssd/john/fly-light-atlas/affineExps/trainingData/'
 
 imname='I3-A6Affine_trainingDat-Image.h5'
 xfmname='I3-A6Affine_trainingDat-Transform.h5'
+maskname='I3-A6Affine_trainingDat-Transform.h5'
 
 # Train set
 train_dataset = []
@@ -23,6 +24,8 @@ train_dataset.append({})
 train_dataset[-1]['name'] = path
 train_dataset[-1]['data'] = np.transpose( np.array(h5py.File(join(path,imname),'r')['main'],dtype=np.float32), [2,1,0])[None,:]
 train_dataset[-1]['label'] = np.transpose( np.array(h5py.File(join(path,xfmname),'r')['main'],dtype=np.float32), [3, 2, 1, 0])
+train_dataset[-1]['label'] = np.transpose( np.array(h5py.File(join(path,xfmname),'r')['main'],dtype=np.float32), [3, 2, 1, 0])
+train_dataset[-1]['mask'] = np.transpose( np.array(h5py.File(join(path,maskname),'r')['main'],dtype=np.float32), [3, 2, 1, 0])
 train_dataset[-1]['transform'] = {}
 train_dataset[-1]['transform']['scale'] = (0.8,1.2)
 train_dataset[-1]['transform']['shift'] = (-0.2,0.2)
