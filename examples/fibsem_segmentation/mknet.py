@@ -16,16 +16,11 @@ netconf.ignore_conv_buffer = True
 netconf.use_batchnorm = False
 netconf.dropout = 0.0
 netconf.fmap_start = 24
-netconf.u_netconfs[0].use_deconvolution_uppath = True
 netconf.u_netconfs[0].unet_fmap_inc_rule = lambda fmaps: int(math.ceil(fmaps * 3))
 netconf.u_netconfs[0].unet_fmap_dec_rule = lambda fmaps: int(math.ceil(fmaps / 3))
 
-# netconf.input_shape = [132, 132, 132]
-# netconf.output_shape = [44, 44, 44]
-# netconf.input_shape = [172, 172, 172]
-# netconf.output_shape = [84, 84, 84]
-netconf.input_shape = [100,]*3
-netconf.output_shape = [100,]*3
+netconf.input_shape = [132,132,132]
+netconf.output_shape = [44, 44, 44]
 
 print ('Input shape: %s' % netconf.input_shape)
 print ('Output shape: %s' % netconf.output_shape)
@@ -48,7 +43,6 @@ with open('net_test.prototxt', 'w') as f:
 #### Make a big test proto
 # Biggest possible network for testing on 12 GB
 netconf.ignore_conv_buffer = True
-netconf.u_netconfs[0].use_deconvolution_uppath = False
 netconf.mem_global_limit = 8 * 1024 * 1024 * 1024
 mode = pygt.netgen.caffe_pb2.TEST
 shape_min = [100,100,100]

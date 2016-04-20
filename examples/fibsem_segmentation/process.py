@@ -25,14 +25,14 @@ test_dataset.append({})
 dname = 'tstvol-520-1-h5'
 test_dataset[-1]['name'] = dname
 h5im = h5py.File(join(path,dname,'img_normalized.h5'),'r')
-h5im_n = pygt.normalize(np.asarray(h5im[h5im.keys()[0]]).astype(float32), -1, 1)
+h5im_n = np.asarray(h5im[h5im.keys()[0]]).astype(float32)/255
 test_dataset[-1]['data'] = h5im_n
 
 test_dataset.append({})
 dname = 'tstvol-520-2-h5'
 test_dataset[-1]['name'] = dname
 h5im = h5py.File(join(path,dname,'img_normalized.h5'),'r')
-h5im_n = pygt.normalize(np.asarray(h5im[h5im.keys()[0]]).astype(float32), -1, 1)
+h5im_n = np.asarray(h5im[h5im.keys()[0]]).astype(float32)/255
 test_dataset[-1]['data'] = h5im_n
 
 
