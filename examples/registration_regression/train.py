@@ -12,34 +12,37 @@ sys.path.append(pygt_path)
 import PyGreentea as pygt
 
 # Load the datasets
-path = '/groups/turaga/home/turagas/data/FlyEM/fibsem_medulla_7col/'
+path = '/data-ssd/john/fly-light-atlas/affineExps/trainingData/'
+
+imname='I3-A6Affine_trainingDat-Image.h5'
+xfmname='I3-A6Affine_trainingDat-Transform.h5'
+
 # Train set
 train_dataset = []
 train_dataset.append({})
-dname = 'tstvol-520-1-h5'
-train_dataset[-1]['name'] = dname
-train_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
-train_dataset[-1]['label'] = 
+train_dataset[-1]['name'] = path
+train_dataset[-1]['data'] = np.transpose( np.array(h5py.File(join(path,imname),'r')['main'],dtype=np.float32), [2,1,0])[None,:]
+train_dataset[-1]['label'] = np.transpose( np.array(h5py.File(join(path,xfmname),'r')['main'],dtype=np.float32), [3, 2, 1, 0])
 train_dataset[-1]['transform'] = {}
 train_dataset[-1]['transform']['scale'] = (0.8,1.2)
 train_dataset[-1]['transform']['shift'] = (-0.2,0.2)
 
 print('Training set contains ' + str(len(train_dataset)) + ' volumes')
-
 for iset in range(len(train_dataset)):
-    train_dataset[iset]['data'] = train_dataset[iset]['data'][None,:]
     print(train_dataset[iset]['name'] + str(iset) + ' shape:' + str(train_dataset[iset]['data'].shape))
+    print(train_dataset[iset]['name'] + str(iset) + ' shape:' + str(train_dataset[iset]['label'].shape))
 
 # Train set
-test_dataset = []
-for dname in ['tstvol-520-2-h5','tstvol-520-1-h5']:
-	test_dataset.append({})
-	test_dataset[-1]['name'] = dname
-	test_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
+#test_dataset = []
+#for dname in ['tstvol-520-2-h5','tstvol-520-1-h5']:
+#	test_dataset.append({})
+#	test_dataset[-1]['name'] = dname
+#	test_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
 
-for iset in range(len(test_dataset)):
-    test_dataset[iset]['data'] = test_dataset[iset]['data'][None,:]
-    print(test_dataset[iset]['name'] + str(iset) + ' shape:' + str(test_dataset[iset]['data'].shape))
+#for iset in range(len(train_dataset)):
+##    test_dataset[iset]['data'] = test_dataset[iset]['data'][None,:]
+#    print(train_dataset[iset]['name'] + str(iset) + ' shape:' + str(test_dataset[iset]['data'].shape))
+#    print(train_dataset[iset]['name'] + str(iset) + ' shape:' + str(test_dataset[iset]['label'].shape))
 
 # Set train options
 class TrainOptions:
@@ -52,7 +55,7 @@ class TrainOptions:
     recompute_affinity = True
     train_device = 0
     test_device = 2
-    test_net='net_test.prototxt'
+    test_net=None
     max_iter = int(1e4)
     snapshot = int(2e3)
     loss_snapshot = int(2e3)
@@ -67,7 +70,7 @@ solver_config = pygt.caffe.SolverParameter()
 solver_config.train_net = 'net_train_euclid.prototxt'
 
 solver_config.type = 'Adam'
-solver_config.base_lr = 1e-4
+solver_config.base_lr = 1e-8
 solver_config.momentum = 0.99
 solver_config.momentum2 = 0.999
 solver_config.delta = 1e-8
@@ -93,4 +96,4 @@ if (len(solverstates) == 0 or solverstates[-1][0] < solver_config.max_iter):
     solver, test_net = pygt.init_solver(solver_config, options)
     if (len(solverstates) > 0):
         solver.restore(solverstates[-1][1])
-    pygt.train(solver, test_net, train_dataset, test_dataset, options)
+    pygt.train(solver, None, train_dataset, [], options)

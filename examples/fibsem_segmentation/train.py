@@ -13,43 +13,29 @@ import PyGreentea as pygt
 
 # Load the datasets
 path = '/groups/turaga/home/turagas/data/FlyEM/fibsem_medulla_7col/'
-# Train set
+
+## Training datasets
 train_dataset = []
 train_dataset.append({})
-dname = 'tstvol-520-1-h5'
+dname = 'trvol-250-1-h5'
 train_dataset[-1]['name'] = dname
 train_dataset[-1]['nhood'] = pygt.malis.mknhood3d()
-train_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
-train_dataset[-1]['components'] = np.array(h5py.File(join(path,dname,'groundtruth_seg_thick.h5'),'r')['main'])
-train_dataset[-1]['label'] = pygt.malis.seg_to_affgraph(train_dataset[-1]['components'],train_dataset[-1]['nhood'])
+train_dataset[-1]['data'] = h5py.File(join(path,dname,'im_uint8.h5'),'r')['main']
+train_dataset[-1]['components'] = h5py.File(join(path,dname,'groundtruth_seg_thick.h5'),'r')['main']
 train_dataset[-1]['transform'] = {}
 train_dataset[-1]['transform']['scale'] = (0.8,1.2)
 train_dataset[-1]['transform']['shift'] = (-0.2,0.2)
 
 print('Training set contains ' + str(len(train_dataset)) + ' volumes')
-print('Running the simple dataset augmenter...')
-train_dataset = pygt.augment_data_simple(train_dataset)
-print('Training set now contains ' + str(len(train_dataset)) + ' volumes')
 
-for iset in range(len(train_dataset)):
-    train_dataset[iset]['data'] = train_dataset[iset]['data'][None,:]
-    train_dataset[iset]['components'] = train_dataset[iset]['components'][None,:]
-    print(train_dataset[iset]['name'] + str(iset) + ' shape:' + str(train_dataset[iset]['data'].shape))
 
-# Train set
+## Testing datasets
 test_dataset = []
-for dname in ['tstvol-520-2-h5','tstvol-520-1-h5']:
+for dname in ['trvol-250-1-h5','trvol-250-2-h5']:
 	test_dataset.append({})
 	test_dataset[-1]['name'] = dname
-	test_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
-# test_dataset.append({})
-# dname = 'tstvol-520-1-h5'
-# test_dataset[-1]['name'] = dname
-# test_dataset[-1]['data'] = np.array(h5py.File(join(path,dname,'im_uint8.h5'),'r')['main'],dtype=np.float32)/(2.**8)
+	test_dataset[-1]['data'] = h5py.File(join(path,dname,'im_uint8.h5'),'r')['main']
 
-for iset in range(len(test_dataset)):
-    test_dataset[iset]['data'] = test_dataset[iset]['data'][None,:]
-    print(test_dataset[iset]['name'] + str(iset) + ' shape:' + str(test_dataset[iset]['data'].shape))
 
 # Set train options
 class TrainOptions:
